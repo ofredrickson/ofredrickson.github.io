@@ -1,5 +1,37 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 100px;
-  }
+  font-family: 'Courier New', monospace;
+  background-color: #f0e6f6;
+  color: #333;
+  background-image: url('images/stars-bg.gif');
+  background-repeat: repeat;
+  padding: 20px;
+}
+
+.container {
+  width: 900px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 2px dashed purple;
+  padding: 20px;
+}
+
+h1, h2 {
+  color: darkmagenta;
+  text-shadow: 1px 1px #fff;
+}
+
+.sidebar {
+  border: 1px solid pink;
+  padding: 10px;
+  background-color: #ffeef8;
+}
+
+a {
+  color: hotpink;
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 3px double pink;
+}

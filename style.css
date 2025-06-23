@@ -2,8 +2,8 @@ body {
   font-family: 'Courier New', monospace;
   background-color: #f0e6f6;
   color: #333;
-  background-image: url('images/stars-bg.gif');
-  background-repeat: repeat;
+  /* background-image: url('images/stars-bg.gif');
+  background-repeat: repeat; */
   padding: 20px;
 }
 

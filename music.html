@@ -1,17 +1,149 @@
+
 <!DOCTYPE html>
 <html>
     <head>
         <title>music - olivia's site</title>
         <link rel="stylesheet" href="style.css">
+
+        <!-- Firebase SDKs -->
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+
     </head>
     <body>
         <div class="container">
-            <h1>my song of the day</h1>
-            <p>songs will appear here</p>
+            <h1>my song diary</h1>
+            <p>take a look at the songs i've been listening to recently.</p>
             <a href="index.html">← back to home</a>
 
             <button id="openModalBtn">post a song</button>
+
+            <div id="songContainer"></div>
         </div>
+
+        <script>          
+            const openBtn = document.getElementById("openModalBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+            const modal = document.getElementById("modal");
+            const form = document.getElementById("songForm");
+            const songContainer = document.createElement("div");
+            document.body.appendChild(songContainer);
+            
+            openBtn.onclick = () => modal.style.display = "block";
+            closeBtn.onclick = () => modal.style.display = "none";
+            
+            window.onclick = (e) => {
+                if (e.target === modal) modal.style.display = "none";
+              };
+  
+  
+          //FIREBASE information
+          const firebaseConfig = {
+              apiKey: "AIzaSyD9dePIDTQkGG3qG5uOb2vh99fXSA2O7NM",
+              authDomain: "personal-blog-f9a04.firebaseapp.com",
+              projectId: "personal-blog-f9a04",
+              storageBucket: "personal-blog-f9a04.firebasestorage.app",
+              messagingSenderId: "98080344884",
+              appId: "1:98080344884:web:d3f0d79291ce8272933361",
+              measurementId: "G-HS3FR0C1QR"
+          };
+  
+          //initialize FIREBASE—use this method if using React (coudl be worth looking into, jobs ask for it)
+          // const app = initializeApp(firebaseConfig);
+          // const analytics = getAnalytics(app);
+  
+          //should i use this initialization below? would that be more suited for the code i wrote
+          firebase.initializeApp(firebaseConfig);
+          const db = firebase.firestore();
+  
+  
+          // //load saved posts when page refreshes
+          // window.onload = function () {
+          //     const savedPosts = localStorage.getItem("songPosts");
+          //     if (savedPosts) {
+          //         songContainer.innerHTML = savedPosts;
+          //     }
+          // };
+        
+          // form.onsubmit = (e) => {
+          //   e.preventDefault();
+            
+          //   const title = document.getElementById("songTitle").value;
+          //   const artist = document.getElementById("artistName").value;
+          //   const description = document.getElementById("description").value;
+          //   const link = document.getElementById("songLink").value;
+        
+          //   const songDiv = document.createElement("div");
+          //   songDiv.innerHTML = `
+          //     <h3>${title} – ${artist}</h3>
+          //     <p>${description}</p>
+          //     <div>${embedLink(link)}</div>
+          //     <hr>
+          //   `;
+          //   songContainer.prepend(songDiv);
+  
+          // // Save updated posts to localStorage
+          // localStorage.setItem("songPosts", songContainer.innerHTML);
+        
+          //   form.reset();
+          //   modal.style.display = "none";
+          // };
+        
+          function embedLink(link) {
+            if (link.includes("youtube.com") || link.includes("youtu.be")) {
+              const embedUrl = link.replace("watch?v=", "embed/").replace("youtu.be/", "www.youtube.com/embed/");
+              return `<iframe width="300" height="169" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
+            } else if (link.includes("spotify.com")) {
+              return `<iframe style="border-radius:12px" src="${link.replace("track/", "embed/track/")}" width="300" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+            } else {
+              return `<a href="${link}" target="_blank">${link}</a>`;
+            }
+          }
+  
+  
+          async function loadSongs() {
+              const snapshot = await db.collection("songs").orderBy("timestamp", "desc").get();
+              songContainer.innerHTML = "";
+  
+              snapshot.forEach(doc => {
+                  const data = doc.data();
+                  const songDiv = document.createElement("div");
+                  songDiv.innerHTML = `
+                  <h3>${data.title} – ${data.artist}</h3>
+                  <p>${data.description}</p>
+                  <div>${embedLink(data.link)}</div>
+                  <hr>
+                  `;
+                  songContainer.appendChild(songDiv);
+              });
+          }
+  
+          //form submission
+          form.onsubmit = async (e) => {
+              e.preventDefault();
+  
+              const title = document.getElementById("songTitle").value;
+              const artist = document.getElementById("artistName").value;
+              const description = document.getElementById("description").value;
+              const link = document.getElementById("songLink").value;
+  
+              await db.collection("songs").add({
+              title,
+              artist,
+              description,
+              link,
+              timestamp: Date.now()
+              });
+  
+              form.reset();
+              modal.style.display = "none";
+              loadSongs(); // refresh display
+          };
+  
+  
+          // Call on page load
+          window.onload = loadSongs;
+        </script>
     </body>
 
     <div id="modal" class="modal" style="display: none;">
@@ -28,63 +160,6 @@
         </div>
       </div>
       
-      <script>
-        const openBtn = document.getElementById("openModalBtn");
-        const closeBtn = document.getElementById("closeModalBtn");
-        const modal = document.getElementById("modal");
-        const form = document.getElementById("songForm");
-        const songContainer = document.createElement("div");
-        document.body.appendChild(songContainer);
       
-        openBtn.onclick = () => modal.style.display = "block";
-        closeBtn.onclick = () => modal.style.display = "none";
-      
-        window.onclick = (e) => {
-          if (e.target === modal) modal.style.display = "none";
-        };
-
-        //load saved posts when page refreshes
-        window.onload = function () {
-            const savedPosts = localStorage.getItem("songPosts");
-            if (savedPosts) {
-                songContainer.innerHTML = savedPosts;
-            }
-        };
-      
-        form.onsubmit = (e) => {
-          e.preventDefault();
-          
-          const title = document.getElementById("songTitle").value;
-          const artist = document.getElementById("artistName").value;
-          const description = document.getElementById("description").value;
-          const link = document.getElementById("songLink").value;
-      
-          const songDiv = document.createElement("div");
-          songDiv.innerHTML = `
-            <h3>${title} – ${artist}</h3>
-            <p>${description}</p>
-            <div>${embedLink(link)}</div>
-            <hr>
-          `;
-          songContainer.prepend(songDiv);
-
-        // Save updated posts to localStorage
-        localStorage.setItem("songPosts", songContainer.innerHTML);
-      
-          form.reset();
-          modal.style.display = "none";
-        };
-      
-        function embedLink(link) {
-          if (link.includes("youtube.com") || link.includes("youtu.be")) {
-            const embedUrl = link.replace("watch?v=", "embed/").replace("youtu.be/", "www.youtube.com/embed/");
-            return `<iframe width="300" height="169" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>`;
-          } else if (link.includes("spotify.com")) {
-            return `<iframe style="border-radius:12px" src="${link.replace("track/", "embed/track/")}" width="300" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
-          } else {
-            return `<a href="${link}" target="_blank">${link}</a>`;
-          }
-        }
-      </script>
       
 </html>

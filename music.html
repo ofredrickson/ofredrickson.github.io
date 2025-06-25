@@ -21,6 +21,20 @@
             <div id="songContainer"></div>
         </div>
 
+        <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+              <span class="close" id="closeModalBtn">&times;</span>
+              <h2>Post a New Song</h2>
+              <form id="songForm">
+                <input type="text" id="songTitle" placeholder="Song Title" required><br>
+                <input type="text" id="artistName" placeholder="Artist Name" required><br>
+                <textarea id="description" placeholder="Write a description..." required></textarea><br>
+                <input type="url" id="songLink" placeholder="Spotify or YouTube link" required><br>
+                <button type="submit">Post</button>
+              </form>
+            </div>
+          </div>
+          
         <script>          
             const openBtn = document.getElementById("openModalBtn");
             const closeBtn = document.getElementById("closeModalBtn");
@@ -39,7 +53,7 @@
   
           //FIREBASE information
           const firebaseConfig = {
-              apiKey: "AIzaSyD9dePIDTQkGG3qG5uOb2vh99fXSA2O7NM",
+              apiKey: "AIzaSyCT-mPbbGInDWZhlzkabWo3GpzD6PHx0kg",
               authDomain: "personal-blog-f9a04.firebaseapp.com",
               projectId: "personal-blog-f9a04",
               storageBucket: "personal-blog-f9a04.firebasestorage.app",
@@ -144,22 +158,5 @@
           // Call on page load
           window.onload = loadSongs;
         </script>
-    </body>
-
-    <div id="modal" class="modal" style="display: none;">
-        <div class="modal-content">
-          <span class="close" id="closeModalBtn">&times;</span>
-          <h2>Post a New Song</h2>
-          <form id="songForm">
-            <input type="text" id="songTitle" placeholder="Song Title" required><br>
-            <input type="text" id="artistName" placeholder="Artist Name" required><br>
-            <textarea id="description" placeholder="Write a description..." required></textarea><br>
-            <input type="url" id="songLink" placeholder="Spotify or YouTube link" required><br>
-            <button type="submit">Post</button>
-          </form>
-        </div>
-      </div>
-      
-      
-      
+    </body>      
 </html>

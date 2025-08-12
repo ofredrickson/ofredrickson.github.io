@@ -3,17 +3,18 @@ body {
   background-color: #f0e6f6;
   color: #333;
   background-image: url('purpleflowerart.jpg');
-  /* background-repeat: repeat; */
-  /* background-size: cover; */
-  padding: 20px;
+  /* padding: 100px; */
+  margin: 0;
 }
 
 .container {
   width: 900px;
-  margin: 0 auto;
+  margin: 20px auto;
   background-color: #fff;
   border: 2px dashed purple;
-  padding: 20px;
+  padding: 20px 20px;
+  padding-top: 70px;
+  position: relative;
 }
 
 .content {
@@ -140,15 +141,21 @@ hr {
 
 .site-header {
   display: flex;
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  z-index: 1000;
   align-items: center;
-  background: #333;
-  padding: 10px 10px;
-  margin-bottom: 20px;
+  /* padding: 5px; */
+  /* margin-bottom: 20px; */
+  background-color: #e66eda;
+  color: purple;
 
 }
 
 .logo img {
-  height: 40px;
+  height: 75px;
+  text-decoration: none;
 }
 
 .navbar ul {
@@ -159,7 +166,7 @@ hr {
 }
 
 .navbar a {
-  color: white;
+  color: purple;
   text-decoration: none;
   font-weight: bold;
 }

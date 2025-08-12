@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Project Title - Portfolio</title>
-  <link rel="stylesheet" href="style.css"> <!-- your existing CSS -->
-</head>
+    <head>
+    <meta charset="UTF-8">
+    <title>Project Title - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <div id="header-placeholder"></div>
+    <script>
+        fetch("header.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("header-placeholder").innerHTML = data);
+    </script>
+    </head>
 <body>
-
-  <!-- Optional: your blog's header/navbar -->
-  <header>
-    <h1><a href="index.html">My 2000s Blog</a></h1>
-  </header>
 
   <main id="project-page">
     <h2>Project Title</h2>

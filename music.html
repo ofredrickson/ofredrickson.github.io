@@ -4,6 +4,12 @@
     <head>
         <title>music - olivia's site</title>
         <link rel="stylesheet" href="style.css">
+        <div id="header-placeholder"></div>
+        <script>
+          fetch("header.html")
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+        </script>
 
     </head>
     <body>
@@ -14,6 +20,8 @@
 
             <button id="openModalBtn">post a song</button>
 
+            <hr>
+            
             <div id="songContainer"></div>
         </div>
 
@@ -40,8 +48,10 @@
             const closeBtn = document.getElementById("closeModalBtn");
             const modal = document.getElementById("modal");
             const form = document.getElementById("songForm");
-            const songContainer = document.createElement("div");
-            document.body.appendChild(songContainer);
+            const songContainer = document.getElementById("songContainer");
+
+            // const songContainer = document.createElement("div");
+            // document.body.appendChild(songContainer);
             
             openBtn.onclick = () => modal.style.display = "block";
             closeBtn.onclick = () => modal.style.display = "none";

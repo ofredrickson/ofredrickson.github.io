@@ -66,3 +66,105 @@ hr {
   border: none;
   border-top: 3px double pink;
 }
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.project-card {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: scale(1.03);
+}
+
+.project-card img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 8px;
+}
+
+.project-card h3 {
+  font-size: 1.1em;
+  color: #333;
+}
+
+#project-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.project-hero {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.project-description, .project-gallery, .project-links {
+  margin-bottom: 25px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+}
+
+.project-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.project-links li {
+  margin-bottom: 5px;
+}
+
+
+.site-header {
+  display: flex;
+  align-items: center;
+  background: #333;
+  padding: 10px 10px;
+  margin-bottom: 20px;
+
+}
+
+.logo img {
+  height: 40px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  margin-left: auto;
+  gap: 15px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+

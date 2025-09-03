@@ -1,59 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>my 2000s blog</title>
-  <link rel="stylesheet" href="style.css">
-  <div id="header-placeholder"></div>
-  <script>
-    fetch("header.html")
-      .then(response => response.text())
-      .then(data => document.getElementById("header-placeholder").innerHTML = data);
-  </script>
-
-</head>
-<body>
-  <div class="container">
-    <h1>olivia's website</h1>
-    <p><em>Welcome! On this website you can find my previous projects I've completed under the "portfolio" tab of this site. <br><br>Below that, you can see where I post about music, films, websites I found, and more! </em></p>
-
-    <hr>
-
-    <div class="post">
-      <h2>August 12, 2025</h2>
-      <p>Just finished writing functionality for posting songs on the "music" tab of my blog. This will showcase songs I've been listening to and why I love them. </p>
-    </div>
-
-    <div class="post">
-      <h2>June 23, 2025</h2>
-      <p>The birthday of this website. </p>
-    </div>
-
-    <hr>
-
-    <section id="portfolio">
-      <h2>Portfolio</h2>
-      <p>Here are some of my previous projects</p>
-      <div id="portfolio-grid" class="portfolio-grid"></div>
-    </section>
-
-
-
-    <hr>
-
-    <div class="sidebar">
-      <h3>Links</h3>
-      <ul>
-        <li><a href="music.html">music</a></li>
-        <li><a href="films.html">films</a></li>
-        <li><a href="websites.html">websites</a></li>
-      </ul>
-    </div>
-
-  </div>
-
-  <script src="portfolio-data.js"></script>
-  <script src="portfolio-grid.js"></script>
-
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/svg+xml" href="/websitelogo2.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
-

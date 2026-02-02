@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { db } from "../firebase/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Modal from "./Modal";
 
 export default function SongPostModal({ onClose, onPost }) {
@@ -12,7 +12,7 @@ export default function SongPostModal({ onClose, onPost }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const song = { title, artist, description, link };
+    const song = { title, artist, description, link, createdAt: serverTimestamp() };
 
     try {
       await addDoc(collection(db, "songs"), song);
@@ -44,7 +44,7 @@ export default function SongPostModal({ onClose, onPost }) {
           required 
         /> 
       </div>
-      
+
         <textarea 
           value={description} 
           onChange={(e) => setDescription(e.target.value)} 

@@ -248,3 +248,15 @@ hr {
   margin-top: 12px; 
 }
 
+
+.song-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.song-date {
+  font-size: 0.8rem;
+  color: #777;
+}
+

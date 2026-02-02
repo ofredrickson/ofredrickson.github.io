@@ -225,3 +225,26 @@ hr {
 }
 
 
+.modal-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* row for title + artist */ 
+.form-row { 
+  display: flex; 
+  gap: 12px; 
+}
+
+.form-row input { 
+  flex: 1; 
+}
+
+/* Buttons spaced apart */ 
+.button-row { 
+  display: flex; 
+  justify-content: space-between; 
+  margin-top: 12px; 
+}
+

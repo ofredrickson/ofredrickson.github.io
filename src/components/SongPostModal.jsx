@@ -29,6 +29,8 @@ export default function SongPostModal({ onClose, onPost }) {
       <h2>Post a Song</h2> 
       
       <form onSubmit={handleSubmit}> 
+
+      <div className="form-row">
         <input 
           value={title} 
           onChange={(e) => setTitle(e.target.value)} 
@@ -41,6 +43,8 @@ export default function SongPostModal({ onClose, onPost }) {
           placeholder="Artist" 
           required 
         /> 
+      </div>
+      
         <textarea 
           value={description} 
           onChange={(e) => setDescription(e.target.value)} 
@@ -51,8 +55,12 @@ export default function SongPostModal({ onClose, onPost }) {
           onChange={(e) => setLink(e.target.value)} 
           placeholder="YouTube/Spotify Link" 
         /> 
+
+      <div className="button-row">
         <button type="submit">Post</button> 
         <button type="button" onClick={onClose}>Cancel</button>
+      </div>
+
       </form> 
     </Modal> 
     );

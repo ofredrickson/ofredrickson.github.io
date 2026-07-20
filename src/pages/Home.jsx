@@ -12,8 +12,8 @@ export default function Home() {
           <span className="eyebrow">✦ personal blog ✦</span>
           <h1>Welcome to my blog</h1>
           <p className="tagline">
-            A little corner of the internet for songs I can't stop
-            replaying, sites I think are cool, and things I'm building.
+            This is where I post about my interests, my current projects,
+            and whatever else I find interesting!
           </p>
         </div>
 
@@ -31,19 +31,19 @@ export default function Home() {
         <Link to="/music" className="topic-card">
           {/* <span className="icon">🎧</span> */}
           <h3>Music</h3>
-          <p>Songs I've been listening to on repeat lately.</p>
+          <p>songs I've been listening to on repeat lately.</p>
         </Link>
 
         <div className="topic-card">
           {/* <span className="icon">🌐</span> */}
           <h3>Sites I Like</h3>
-          <p>Corners of the web worth bookmarking. Coming soon!</p>
+          <p>coming soon: a section to post about cool websites i found </p>
         </div>
 
         <div className="topic-card">
           {/* <span className="icon">🛠️</span> */}
           <h3>Projects</h3>
-          <p>Things I'm building, from code to little side quests.</p>
+          <p>my past and present projects</p>
         </div>
       </div>
     </div>

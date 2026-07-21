@@ -27,6 +27,7 @@ import logo from "/websitelogo2.png";
 const LINKS = [
   { to: "/", label: "Home" },
   { to: "/music", label: "Music" },
+  { to: "/projects", label: "Projects" },
 ];
 
 export default function Navbar() {

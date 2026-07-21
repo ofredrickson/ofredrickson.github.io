@@ -19,7 +19,7 @@ export default function Home() {
 
         {/* right side */}
         <div className="home-right">
-          <img src="/me.jpg" alt="Me" className="profile-pic" />
+          <img src="/me.jpeg" alt="Me" className="profile-pic" />
           <p>
             hi, I'm Olivia! this is my personal blog where I post about
             music, websites I like, and projects I'm working on.

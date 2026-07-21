@@ -3,6 +3,8 @@ import { db } from "../firebase/firebase";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import Modal from "./Modal";
 
+const LOCAL_STORAGE_KEY = "user_projects_local";
+
 export default function ProjectDetailModal({ project, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -20,7 +22,6 @@ export default function ProjectDetailModal({ project, onClose }) {
   );
   const [description, setDescription] = useState(project.description || "");
 
-  // Convert comma-separated string to clean array of skills
   const parseSkills = (input) => {
     if (!input) return [];
     if (Array.isArray(input)) return input;
@@ -30,46 +31,80 @@ export default function ProjectDetailModal({ project, onClose }) {
       .filter((s) => s.length > 0);
   };
 
+  const updateLocalStorage = (updatedProject) => {
+    try {
+      let localProjects = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
+      );
+      const index = localProjects.findIndex((p) => p.id === project.id);
+      if (index !== -1) {
+        localProjects[index] = { ...localProjects[index], ...updatedProject };
+      } else {
+        localProjects.unshift(updatedProject);
+      }
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localProjects));
+    } catch (err) {
+      console.error("Failed to update local storage:", err);
+    }
+  };
+
+  const deleteFromLocalStorage = () => {
+    try {
+      let localProjects = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
+      );
+      localProjects = localProjects.filter((p) => p.id !== project.id);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localProjects));
+    } catch (err) {
+      console.error("Failed to delete from local storage:", err);
+    }
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
+    const updatedData = {
+      title,
+      dateRange,
+      imageUrl: imageUrl.trim() || null,
+      link: link.trim() || null,
+      skills: parseSkills(skills),
+      description,
+    };
+
     try {
-      // If it's a seed fallback project without a Firestore ID, doc update fails gracefully
-      if (project.id && !project.isSeed) {
+      if (project.id && !project.id.startsWith("local-") && !project.isSeed) {
         const projectRef = doc(db, "projects", project.id);
-        await updateDoc(projectRef, {
-          title,
-          dateRange,
-          imageUrl: imageUrl.trim() || null,
-          link: link.trim() || null,
-          skills: parseSkills(skills),
-          description,
-        });
+        await updateDoc(projectRef, updatedData);
+      } else {
+        updateLocalStorage({ ...project, ...updatedData });
       }
-      setIsEditing(false);
-      onClose();
     } catch (err) {
-      console.error("Error updating project:", err);
-      alert("Failed to update project. Please try again.");
+      console.warn("Firestore update warning, saving locally:", err);
+      updateLocalStorage({ ...project, ...updatedData });
     } finally {
+      setIsEditing(false);
       setSubmitting(false);
+      onClose();
     }
   };
 
   const handleDelete = async () => {
     setSubmitting(true);
     try {
-      if (project.id && !project.isSeed) {
+      if (project.id && !project.id.startsWith("local-") && !project.isSeed) {
         const projectRef = doc(db, "projects", project.id);
         await deleteDoc(projectRef);
+      } else {
+        deleteFromLocalStorage();
       }
-      onClose();
     } catch (err) {
-      console.error("Error deleting project:", err);
-      alert("Failed to delete project. Please try again.");
+      console.warn("Firestore delete warning, deleting locally:", err);
+      deleteFromLocalStorage();
     } finally {
       setSubmitting(false);
+      onClose();
     }
   };
 
@@ -82,7 +117,7 @@ export default function ProjectDetailModal({ project, onClose }) {
           <h2>Edit Project</h2>
           <form onSubmit={handleUpdate}>
             <div className="form-row">
-              <div>
+              <div className="form-group">
                 <label className="form-label">Project Title</label>
                 <input
                   value={title}
@@ -91,45 +126,53 @@ export default function ProjectDetailModal({ project, onClose }) {
                   required
                 />
               </div>
-              <div>
+              <div className="form-group">
                 <label className="form-label">Start — Completion Date</label>
                 <input
                   value={dateRange}
                   onChange={(e) => setDateRange(e.target.value)}
-                  placeholder="e.g. 2025 or 2024 - 2025"
+                  placeholder="e.g. 2025"
                   required
                 />
               </div>
             </div>
 
-            <label className="form-label">Skills / Tech Stack (comma separated)</label>
-            <input
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
-              placeholder="e.g. Java, React, TypeScript, SQL"
-            />
+            <div className="form-group">
+              <label className="form-label">Skills / Tech Stack (comma separated)</label>
+              <input
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+                placeholder="e.g. Java, React, TypeScript, SQL"
+              />
+            </div>
 
-            <label className="form-label">Screenshot / Image URL</label>
-            <input
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
-            />
+            <div className="form-group">
+              <label className="form-label">Screenshot / Image URL</label>
+              <input
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://..."
+              />
+            </div>
 
-            <label className="form-label">Project Link (optional)</label>
-            <input
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-              placeholder="https://github.com/..."
-            />
+            <div className="form-group">
+              <label className="form-label">Project Link (optional)</label>
+              <input
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                placeholder="https://github.com/..."
+              />
+            </div>
 
-            <label className="form-label">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your project, technologies used, and key features..."
-              rows={4}
-            />
+            <div className="form-group">
+              <label className="form-label">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe your project, technologies used, and key features..."
+                rows={4}
+              />
+            </div>
 
             <div className="button-row">
               <button type="submit" disabled={submitting}>

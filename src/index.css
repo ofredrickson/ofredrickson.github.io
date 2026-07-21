@@ -759,13 +759,20 @@ button[type="button"]:hover {
   cursor: pointer;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
 .form-label {
   display: block;
   font-family: var(--font-label);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: bold;
-  color: var(--ink-soft);
-  margin-bottom: -10px;
+  color: var(--ink);
+  margin-bottom: 2px;
 }
 
 .modal-date-badge {
@@ -850,7 +857,7 @@ button[type="button"]:hover {
   display: flex;
   gap: 12px;
 }
-.form-row input {
+.form-row .form-group {
   flex: 1;
 }
 
@@ -870,11 +877,18 @@ button[type="button"]:hover {
 /* ============================================
    PROJECTS PAGE (Citrus & Vector Aesthetic)
    ============================================ */
+body:has(.projects-page-wrapper) {
+  background: linear-gradient(165deg, #f2f9db 0%, #e2f3b7 40%, #d4eb9c 100%) !important;
+}
+
 .projects-page-wrapper {
   position: relative;
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
+  margin-top: -96px;
+  padding-top: 116px;
+  margin-bottom: -40px;
+  padding-bottom: 70px;
   background: linear-gradient(165deg, #f2f9db 0%, #e2f3b7 40%, #d4eb9c 100%);
-  padding-bottom: 50px;
   overflow: hidden;
 }
 

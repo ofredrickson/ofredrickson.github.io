@@ -40,11 +40,11 @@ export default function Home() {
           <p>coming soon: a section to post about cool websites i found </p>
         </div>
 
-        <div className="topic-card">
+        <Link to="/projects" className="topic-card">
           {/* <span className="icon">🛠️</span> */}
           <h3>Projects</h3>
           <p>my past and present projects</p>
-        </div>
+        </Link>
       </div>
     </div>
   );

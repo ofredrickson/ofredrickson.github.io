@@ -3,6 +3,8 @@ import { db } from "../firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Modal from "./Modal";
 
+const LOCAL_STORAGE_KEY = "user_projects_local";
+
 export default function ProjectPostModal({ onClose, onPost }) {
   const [title, setTitle] = useState("");
   const [dateRange, setDateRange] = useState("");
@@ -21,25 +23,45 @@ export default function ProjectPostModal({ onClose, onPost }) {
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
-    const projectData = {
+    const newProject = {
+      id: "local-" + Date.now(),
       title,
       dateRange,
       imageUrl: imageUrl.trim() || null,
       link: link.trim() || null,
       skills: skillsArray,
       description,
-      createdAt: serverTimestamp(),
+      createdAt: new Date().toISOString(),
     };
 
+    // Try saving to Firestore first
     try {
-      await addDoc(collection(db, "projects"), projectData);
-      onPost(projectData);
-      onClose();
+      const docRef = await addDoc(collection(db, "projects"), {
+        title: newProject.title,
+        dateRange: newProject.dateRange,
+        imageUrl: newProject.imageUrl,
+        link: newProject.link,
+        skills: newProject.skills,
+        description: newProject.description,
+        createdAt: serverTimestamp(),
+      });
+      newProject.id = docRef.id;
     } catch (err) {
-      console.error("Error adding project:", err);
-      alert("Failed to add project. Please try again.");
+      console.warn("Firestore save failed, saving project to local storage:", err);
+      // Save locally so the project persists across page reloads seamlessly
+      try {
+        const existingLocal = JSON.parse(
+          localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
+        );
+        existingLocal.unshift(newProject);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingLocal));
+      } catch (localErr) {
+        console.error("Local storage save error:", localErr);
+      }
     } finally {
+      onPost(newProject);
       setSubmitting(false);
+      onClose();
     }
   };
 
@@ -50,7 +72,7 @@ export default function ProjectPostModal({ onClose, onPost }) {
 
         <form onSubmit={handleSubmit}>
           <div className="form-row">
-            <div>
+            <div className="form-group">
               <label className="form-label">Project Title</label>
               <input
                 value={title}
@@ -59,46 +81,54 @@ export default function ProjectPostModal({ onClose, onPost }) {
                 required
               />
             </div>
-            <div>
+            <div className="form-group">
               <label className="form-label">Start — Completion Date</label>
               <input
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value)}
-                placeholder="e.g. 2025 or 2024 - 2025"
+                placeholder="e.g. 2025"
                 required
               />
             </div>
           </div>
 
-          <label className="form-label">Skills / Tech Stack (comma separated)</label>
-          <input
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-            placeholder="e.g. Java, React, TypeScript, SQL"
-          />
+          <div className="form-group">
+            <label className="form-label">Skills / Tech Stack (comma separated)</label>
+            <input
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              placeholder="e.g. Java, React, TypeScript, SQL"
+            />
+          </div>
 
-          <label className="form-label">Screenshot / Image URL (optional)</label>
-          <input
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="https://..."
-          />
+          <div className="form-group">
+            <label className="form-label">Screenshot / Image URL (optional)</label>
+            <input
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://..."
+            />
+          </div>
 
-          <label className="form-label">Project Link (optional)</label>
-          <input
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            placeholder="https://github.com/..."
-          />
+          <div className="form-group">
+            <label className="form-label">Project Link (optional)</label>
+            <input
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              placeholder="https://github.com/..."
+            />
+          </div>
 
-          <label className="form-label">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe your project, technologies used, and key features..."
-            rows={4}
-            required
-          />
+          <div className="form-group">
+            <label className="form-label">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe your project, technologies used, and key features..."
+              rows={4}
+              required
+            />
+          </div>
 
           <div className="button-row">
             <button type="submit" disabled={submitting}>

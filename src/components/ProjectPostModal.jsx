@@ -3,8 +3,6 @@ import { db } from "../firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Modal from "./Modal";
 
-const LOCAL_STORAGE_KEY = "user_projects_local";
-
 export default function ProjectPostModal({ onClose, onPost }) {
   const [title, setTitle] = useState("");
   const [dateRange, setDateRange] = useState("");
@@ -23,45 +21,25 @@ export default function ProjectPostModal({ onClose, onPost }) {
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
-    const newProject = {
-      id: "local-" + Date.now(),
+    const project = {
       title,
       dateRange,
       imageUrl: imageUrl.trim() || null,
       link: link.trim() || null,
       skills: skillsArray,
       description,
-      createdAt: new Date().toISOString(),
+      createdAt: serverTimestamp(),
     };
 
-    // Try saving to Firestore first
     try {
-      const docRef = await addDoc(collection(db, "projects"), {
-        title: newProject.title,
-        dateRange: newProject.dateRange,
-        imageUrl: newProject.imageUrl,
-        link: newProject.link,
-        skills: newProject.skills,
-        description: newProject.description,
-        createdAt: serverTimestamp(),
-      });
-      newProject.id = docRef.id;
-    } catch (err) {
-      console.warn("Firestore save failed, saving project to local storage:", err);
-      // Save locally so the project persists across page reloads seamlessly
-      try {
-        const existingLocal = JSON.parse(
-          localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
-        );
-        existingLocal.unshift(newProject);
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingLocal));
-      } catch (localErr) {
-        console.error("Local storage save error:", localErr);
-      }
-    } finally {
-      onPost(newProject);
-      setSubmitting(false);
+      await addDoc(collection(db, "projects"), project);
+      onPost(project);
       onClose();
+    } catch (err) {
+      console.error("Error adding project to Firestore:", err);
+      alert(`Firestore Error: ${err.message || err}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 

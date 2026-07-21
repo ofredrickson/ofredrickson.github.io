@@ -3,8 +3,6 @@ import { db } from "../firebase/firebase";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import Modal from "./Modal";
 
-const LOCAL_STORAGE_KEY = "user_projects_local";
-
 export default function ProjectDetailModal({ project, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -31,80 +29,45 @@ export default function ProjectDetailModal({ project, onClose }) {
       .filter((s) => s.length > 0);
   };
 
-  const updateLocalStorage = (updatedProject) => {
-    try {
-      let localProjects = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
-      );
-      const index = localProjects.findIndex((p) => p.id === project.id);
-      if (index !== -1) {
-        localProjects[index] = { ...localProjects[index], ...updatedProject };
-      } else {
-        localProjects.unshift(updatedProject);
-      }
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localProjects));
-    } catch (err) {
-      console.error("Failed to update local storage:", err);
-    }
-  };
-
-  const deleteFromLocalStorage = () => {
-    try {
-      let localProjects = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"
-      );
-      localProjects = localProjects.filter((p) => p.id !== project.id);
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localProjects));
-    } catch (err) {
-      console.error("Failed to delete from local storage:", err);
-    }
-  };
-
   const handleUpdate = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const updatedData = {
-      title,
-      dateRange,
-      imageUrl: imageUrl.trim() || null,
-      link: link.trim() || null,
-      skills: parseSkills(skills),
-      description,
-    };
-
     try {
-      if (project.id && !project.id.startsWith("local-") && !project.isSeed) {
+      if (project.id && !project.isSeed) {
         const projectRef = doc(db, "projects", project.id);
-        await updateDoc(projectRef, updatedData);
-      } else {
-        updateLocalStorage({ ...project, ...updatedData });
+        await updateDoc(projectRef, {
+          title,
+          dateRange,
+          imageUrl: imageUrl.trim() || null,
+          link: link.trim() || null,
+          skills: parseSkills(skills),
+          description,
+        });
       }
-    } catch (err) {
-      console.warn("Firestore update warning, saving locally:", err);
-      updateLocalStorage({ ...project, ...updatedData });
-    } finally {
       setIsEditing(false);
-      setSubmitting(false);
       onClose();
+    } catch (err) {
+      console.error("Error updating project:", err);
+      alert(`Failed to update project: ${err.message || err}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleDelete = async () => {
     setSubmitting(true);
     try {
-      if (project.id && !project.id.startsWith("local-") && !project.isSeed) {
+      if (project.id && !project.isSeed) {
         const projectRef = doc(db, "projects", project.id);
         await deleteDoc(projectRef);
-      } else {
-        deleteFromLocalStorage();
       }
+      onClose();
     } catch (err) {
-      console.warn("Firestore delete warning, deleting locally:", err);
-      deleteFromLocalStorage();
+      console.error("Error deleting project:", err);
+      alert(`Failed to delete project: ${err.message || err}`);
     } finally {
       setSubmitting(false);
-      onClose();
     }
   };
 

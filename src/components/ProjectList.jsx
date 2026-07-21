@@ -3,9 +3,6 @@ import { db } from "../firebase/firebase";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import ProjectDetailModal from "./ProjectDetailModal";
 
-const LOCAL_STORAGE_KEY = "user_projects_local";
-
-// Initial seed sample projects based on Figma mockup
 const SEED_PROJECTS = [
   {
     id: "seed-fridgebuddy",
@@ -36,30 +33,8 @@ export default function ProjectList({ refresh }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
-    // Read local projects from localStorage
-    const getLocalProjects = () => {
-      try {
-        return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
-      } catch (err) {
-        return [];
-      }
-    };
-
-    // Combine Firestore, local, and seed projects
-    const mergeProjects = (dbProjects = []) => {
-      const localProjects = getLocalProjects();
-      const combined = [...dbProjects, ...localProjects];
-
-      if (combined.length === 0) {
-        setProjects(SEED_PROJECTS);
-      } else {
-        // Filter out seed duplicates if any real or local projects exist
-        setProjects(combined);
-      }
-    };
-
-    // Real-time Firestore listener
     const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
@@ -67,11 +42,15 @@ export default function ProjectList({ refresh }) {
           id: doc.id,
           ...doc.data(),
         }));
-        mergeProjects(dbData);
+        if (dbData.length > 0) {
+          setProjects(dbData);
+        } else {
+          setProjects(SEED_PROJECTS);
+        }
       },
       (err) => {
-        console.warn("Firestore projects listener warning, using local/seed projects:", err);
-        mergeProjects([]);
+        console.error("Error fetching projects from Firestore:", err);
+        setProjects(SEED_PROJECTS);
       }
     );
 

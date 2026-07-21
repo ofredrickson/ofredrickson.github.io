@@ -81,7 +81,7 @@ export default function Projects() {
                   startOffset="50%"
                   textAnchor="middle"
                 >
-                  My Portfolio & Projects ✦
+                  My Portfolio & Projects
                 </textPath>
               </text>
             </svg>

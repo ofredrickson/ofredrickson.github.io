@@ -28,6 +28,7 @@ const LINKS = [
   { to: "/", label: "Home" },
   { to: "/music", label: "Music" },
   { to: "/projects", label: "Projects" },
+  { to: "/sites", label: "Cool Sites" },
 ];
 
 export default function Navbar() {

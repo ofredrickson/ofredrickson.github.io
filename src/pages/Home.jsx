@@ -34,11 +34,11 @@ export default function Home() {
           <p>songs I've been listening to on repeat lately.</p>
         </Link>
 
-        <div className="topic-card">
+        <Link to="/sites" className="topic-card">
           {/* <span className="icon">🌐</span> */}
           <h3>Sites I Like</h3>
-          <p>coming soon: a section to post about cool websites i found </p>
-        </div>
+          <p>cool websites, web art, and neat tools I've discovered!</p>
+        </Link>
 
         <Link to="/projects" className="topic-card">
           {/* <span className="icon">🛠️</span> */}

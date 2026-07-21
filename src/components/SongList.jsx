@@ -37,20 +37,32 @@ export default function SongList({ refresh }) {
           : "—"; // fallback for older posts
         return (
           <div key={song.id} className="song-card">
-            <div className="song-header">
-              <h3>
-                {song.title} — {song.artist}
-              </h3>
-              <span className="song-date">{dateString}</span>
-            </div>
-
-            <p>{song.description}</p>
-
-            {song.link && (
-              <a href={song.link} target="_blank" rel="noreferrer">
-                Listen ↗
-              </a>
+            {song.coverUrl ? (
+              <img
+                src={song.coverUrl}
+                alt={`${song.title} cover`}
+                className="song-cover"
+              />
+            ) : (
+              <div className="song-cover-placeholder">🎵</div>
             )}
+
+            <div className="song-card-body">
+              <div className="song-header">
+                <h3>
+                  {song.title} — {song.artist}
+                </h3>
+                <span className="song-date">{dateString}</span>
+              </div>
+
+              <p>{song.description}</p>
+
+              {song.link && (
+                <a href={song.link} target="_blank" rel="noreferrer">
+                  Listen ↗
+                </a>
+              )}
+            </div>
           </div>
         );
       })}

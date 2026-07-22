@@ -62,13 +62,13 @@ export default function Sites() {
                 d="M 40 90 Q 250 20 460 90"
                 fill="transparent"
               />
-              <text className="curved-title-text text-turquoise-title">
+              <text className="curved-title-text" style={{ fill: '#00695c' }}>
                 <textPath
                   href="#text-arch-path-sites"
                   startOffset="50%"
                   textAnchor="middle"
                 >
-                  Cool Sites & Discoveries ✦
+                  Cool Sites & Discoveries
                 </textPath>
               </text>
             </svg>

@@ -1175,14 +1175,18 @@ body:has(.projects-page-wrapper) {
 /* ============================================
    SITES PAGE (Bubble Grid Aesthetic)
    ============================================ */
-   .sites-page-wrapper {
+  body:has(.sites-page-wrapper) {
+    background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 40%, #4fc3f7 100%) !important;
+  }
+   
+  .sites-page-wrapper {
     position: relative;
     min-height: 100vh;
     margin-top: -96px;
     padding-top: 116px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-    background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 40%, #4fc3f7 100%);
+    margin-bottom: -40px;
+    padding-bottom: 70px;
+    background: transparent;
     overflow: hidden;
   }
   

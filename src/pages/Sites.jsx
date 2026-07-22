@@ -73,7 +73,7 @@ export default function Sites() {
               </text>
             </svg>
             <p className="sites-subtitle">
-              Cool corners of the web, neat tools, and web art I've found!
+              Interesting websites I've come across and want to have in one place.
             </p>
           </div>
 

@@ -1180,8 +1180,8 @@ body:has(.projects-page-wrapper) {
     min-height: 100vh;
     margin-top: -96px;
     padding-top: 116px;
-    margin-bottom: -40px;
-    padding-bottom: 70px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
     background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 40%, #4fc3f7 100%);
     overflow: hidden;
   }
@@ -1244,9 +1244,10 @@ body:has(.projects-page-wrapper) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 32px;
-    padding: 20px;
+    padding: 40px 20px 80px 20px;
     justify-items: center;
     align-items: start;
+    min-height: 600px;
   }
   
   /* Base Bubble Styling */
